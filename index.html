@@ -1,0 +1,417 @@
+<html><head><base href="https://miningproject.kst/"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>KST Token Mining Project</title>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #000;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.crypto-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.2;
+}
+
+.god-image {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+.token-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.claim-button {
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    border: none;
+    color: #000;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.claim-button:hover {
+    transform: scale(1.05);
+}
+
+.claim-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.sections {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.section-button {
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.section-button:hover {
+    transform: scale(1.05);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    color: #000;
+    border-radius: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#wallet {
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+}
+
+#friends {
+    background: url('https://example.com/friends-icon.png') no-repeat center;
+    background-size: cover;
+}
+
+#tasks {
+    background: url('https://example.com/gift-icon.png') no-repeat center;
+    background-size: cover;
+}
+
+#more {
+    background: url('https://example.com/gears-icon.png') no-repeat center;
+    background-size: cover;
+}
+
+.subsection-button {
+    background: #444;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.subsection-button:hover {
+    background: #555;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="crypto-bg">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="crypto-pattern" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+                    <circle cx="25" cy="25" r="20" fill="none" stroke="#FFD700" stroke-width="2">
+                        <animate attributeName="r" from="15" to="25" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <path d="M15,25 L35,25 M25,15 L25,35" stroke="#FFD700" stroke-width="2" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#crypto-pattern)" />
+        </svg>
+    </div>
+    
+    <div class="god-image">
+        <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="90" fill="#FFD700" />
+            <circle cx="70" cy="80" r="10" fill="#000" />
+            <circle cx="130" cy="80" r="10" fill="#000" />
+            <path d="M70,120 Q100,150 130,120" fill="none" stroke="#000" stroke-width="5" />
+            <animateTransform attributeName="transform" attributeType="XML" type="translate" from="0 0" to="0 -20" dur="3s" repeatCount="indefinite" />
+        </svg>
+    </div>
+    
+    <div class="token-name">KST Token</div>
+    
+    <button id="claimButton" class="claim-button" disabled>Claim (12:00:00)</button>
+    
+    <div class="sections">
+        <button id="walletButton" class="section-button">Wallet</button>
+        <button id="friendsButton" class="section-button">Friends</button>
+        <button id="tasksButton" class="section-button">Tasks</button>
+        <button id="moreButton" class="section-button">More</button>
+    </div>
+</div>
+
+<div id="walletModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Wallet</h2>
+        <p>Total mined tokens: <span id="totalTokens">0</span> KST</p>
+        <div style="width: 100px; height: 100px; margin: 20px auto; background: url('https://example.com/money-animation.gif') no-repeat center; background-size: cover;"></div>
+    </div>
+</div>
+
+<div id="friendsModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Friends</h2>
+        <p>Referral link: <a href="https://t.me/KSTTokenBot?start=ref123">https://t.me/KSTTokenBot?start=ref123</a></p>
+        <p>Total invited friends: <span id="totalFriends">0</span></p>
+        <p>Bonus: <span id="friendBonus">0</span> KST</p>
+        <div style="width: 100px; height: 100px; margin: 20px auto; background: url('https://example.com/friends-animation.gif') no-repeat center; background-size: cover;"></div>
+    </div>
+</div>
+
+<div id="tasksModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Tasks</h2>
+        <ul id="taskList" style="list-style-type: none; padding: 0;">
+            <li>Follow us on Twitter (+0.1 KST)</li>
+            <li>Join our Telegram group (+0.2 KST)</li>
+            <li>Share our post on Facebook (+0.3 KST)</li>
+        </ul>
+        <div style="width: 100px; height: 100px; margin: 20px auto; background: url('https://example.com/gift-animation.gif') no-repeat center; background-size: cover;"></div>
+    </div>
+</div>
+
+<div id="moreModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>More</h2>
+        <button id="upgradesButton" class="subsection-button">Upgrades</button>
+        <button id="stakingButton" class="subsection-button">Staking</button>
+        <button id="soonButton" class="subsection-button">Soon</button>
+        <button id="settingsButton" class="subsection-button">Settings</button>
+    </div>
+</div>
+
+<div id="upgradesModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Upgrades</h2>
+        <p>Current mining speed: <span id="miningSpeed">1</span> KST/12h</p>
+        <button id="upgradeTon" class="subsection-button">Upgrade with TON (1 TON = +0.5 KST/12h)</button>
+        <button id="upgradeStars" class="subsection-button">Upgrade with Stars (100 Stars = +0.5 KST/12h)</button>
+    </div>
+</div>
+
+<div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Settings</h2>
+        <button id="englishButton" class="subsection-button">English</button>
+        <button id="russianButton" class="subsection-button">Русский</button>
+    </div>
+</div>
+
+<script>
+let totalTokens = 0;
+let claimTime = 43200000; // 12 hours in milliseconds
+let lastClaim = Date.now() - claimTime; // Set initial claim time to now - 12 hours
+let language = 'en';
+let miningSpeed = 1;
+
+function updateClaimButton() {
+    const now = Date.now();
+    const timeDiff = now - lastClaim;
+    const timeLeft = claimTime - timeDiff;
+    
+    if (timeLeft <= 0) {
+        document.getElementById('claimButton').textContent = language === 'en' ? 'Claim' : 'Получить';
+        document.getElementById('claimButton').disabled = false;
+    } else {
+        const hours = Math.floor(timeLeft / 3600000);
+        const minutes = Math.floor((timeLeft % 3600000) / 60000);
+        const seconds = Math.floor((timeLeft % 60000) / 1000);
+        const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        document.getElementById('claimButton').textContent = `${language === 'en' ? 'Claim' : 'Получить'} (${timeString})`;
+        document.getElementById('claimButton').disabled = true;
+    }
+}
+
+function claim() {
+    totalTokens += miningSpeed;
+    lastClaim = Date.now();
+    updateTotalTokens();
+    updateClaimButton();
+}
+
+function updateTotalTokens() {
+    document.getElementById('totalTokens').textContent = totalTokens.toFixed(2);
+}
+
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'block';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+function changeLanguage(lang) {
+    language = lang;
+    updateTexts();
+}
+
+function updateTexts() {
+    const texts = {
+        en: {
+            claim: 'Claim',
+            wallet: 'Wallet',
+            friends: 'Friends',
+            tasks: 'Tasks',
+            more: 'More',
+            totalMined: 'Total mined tokens:',
+            referralLink: 'Referral link:',
+            totalInvited: 'Total invited friends:',
+            bonus: 'Bonus:',
+            upgrades: 'Upgrades',
+            staking: 'Staking',
+            soon: 'Soon',
+            settings: 'Settings',
+            currentMiningSpeed: 'Current mining speed:',
+            upgradeWithTon: 'Upgrade with TON (1 TON = +0.5 KST/12h)',
+            upgradeWithStars: 'Upgrade with Stars (100 Stars = +0.5 KST/12h)'
+        },
+        ru: {
+            claim: 'Получить',
+            wallet: 'Кошелек',
+            friends: 'Друзья',
+            tasks: 'Задания',
+            more: 'Еще',
+            totalMined: 'Всего добыто токенов:',
+            referralLink: 'Реферальная ссылка:',
+            totalInvited: 'Всего приглашенных друзей:',
+            bonus: 'Бонус:',
+            upgrades: 'Улучшения',
+            staking: 'Стейкинг',
+            soon: 'Скоро',
+            settings: 'Настройки',
+            currentMiningSpeed: 'Текущая скорость майнинга:',
+            upgradeWithTon: 'Улучшить за TON (1 TON = +0.5 KST/12ч)',
+            upgradeWithStars: 'Улучшить за Stars (100 Stars = +0.5 KST/12ч)'
+        }
+    };
+
+    document.getElementById('claimButton').textContent = texts[language].claim;
+    document.getElementById('walletButton').textContent = texts[language].wallet;
+    document.getElementById('friendsButton').textContent = texts[language].friends;
+    document.getElementById('tasksButton').textContent = texts[language].tasks;
+    document.getElementById('moreButton').textContent = texts[language].more;
+    document.querySelector('#walletModal h2').textContent = texts[language].wallet;
+    document.querySelector('#walletModal p').innerHTML = `${texts[language].totalMined} <span id="totalTokens">${totalTokens.toFixed(2)}</span> KST`;
+    document.querySelector('#friendsModal h2').textContent = texts[language].friends;
+    document.querySelector('#friendsModal p:nth-child(2)').textContent = `${texts[language].referralLink} https://t.me/KSTTokenBot?start=ref123`;
+    document.querySelector('#friendsModal p:nth-child(3)').innerHTML = `${texts[language].totalInvited} <span id="totalFriends">0</span>`;
+    document.querySelector('#friendsModal p:nth-child(4)').innerHTML = `${texts[language].bonus} <span id="friendBonus">0</span> KST`;
+    document.querySelector('#tasksModal h2').textContent = texts[language].tasks;
+    document.querySelector('#moreModal h2').textContent = texts[language].more;
+    document.getElementById('upgradesButton').textContent = texts[language].upgrades;
+    document.getElementById('stakingButton').textContent = texts[language].staking;
+    document.getElementById('soonButton').textContent = texts[language].soon;
+    document.getElementById('settingsButton').textContent = texts[language].settings;
+    document.querySelector('#upgradesModal h2').textContent = texts[language].upgrades;
+    document.querySelector('#upgradesModal p').innerHTML = `${texts[language].currentMiningSpeed} <span id="miningSpeed">${miningSpeed}</span> KST/12h`;
+    document.getElementById('upgradeTon').textContent = texts[language].upgradeWithTon;
+    document.getElementById('upgradeStars').textContent = texts[language].upgradeWithStars;
+    document.querySelector('#settingsModal h2').textContent = texts[language].settings;
+}
+
+document.getElementById('claimButton').addEventListener('click', claim);
+document.getElementById('walletButton').addEventListener('click', () => openModal('walletModal'));
+document.getElementById('friendsButton').addEventListener('click', () => openModal('friendsModal'));
+document.getElementById('tasksButton').addEventListener('click', () => openModal('tasksModal'));
+document.getElementById('moreButton').addEventListener('click', () => openModal('moreModal'));
+document.getElementById('upgradesButton').addEventListener('click', () => openModal('upgradesModal'));
+document.getElementById('settingsButton').addEventListener('click', () => openModal('settingsModal'));
+document.getElementById('englishButton').addEventListener('click', () => changeLanguage('en'));
+document.getElementById('russianButton').addEventListener('click', () => changeLanguage('ru'));
+
+document.querySelectorAll('.close').forEach(closeBtn => {
+    closeBtn.addEventListener('click', () => {
+        closeBtn.closest('.modal').style.display = 'none';
+    });
+});
+
+document.getElementById('upgradeTon').addEventListener('click', () => {
+    // Implement TON upgrade logic here
+    miningSpeed += 0.5;
+    updateMiningSpeed();
+});
+
+document.getElementById('upgradeStars').addEventListener('click', () => {
+    // Implement Stars upgrade logic here
+    miningSpeed += 0.5;
+    updateMiningSpeed();
+});
+
+function updateMiningSpeed() {
+    document.getElementById('miningSpeed').textContent = miningSpeed.toFixed(2);
+}
+
+setInterval(updateClaimButton, 1000);
+updateTexts();
+updateTotalTokens();
+updateMiningSpeed();
+</script>
+</body>
+</html>
